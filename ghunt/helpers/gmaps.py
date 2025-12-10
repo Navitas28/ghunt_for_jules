@@ -57,9 +57,9 @@ async def get_reviews(as_client: httpx.AsyncClient, gaia_id: str) -> Tuple[str, 
         return "failed", stats, [], []
 
     data = json.loads(req.text[5:])
-    if not data[16][8]:
+    if not data[15][8]:
         return "empty", stats, [], []
-    stats = {sec[6]:sec[7] for sec in data[16][8][0]}
+    stats = {sec[6]:sec[7] for sec in data[15][8][0]}
     total_reviews = stats["Reviews"] + stats["Ratings"] + stats["Photos"]
     if not total_reviews:
         return "empty", stats, [], []
@@ -81,7 +81,7 @@ async def get_reviews(as_client: httpx.AsyncClient, gaia_id: str) -> Tuple[str, 
 
                 # Reviews
                 if category == "reviews":
-                    if not data[24]:
+                    if len(data) <= 24 or not data[24]:
                         return "private", stats, [], []
                     reviews_data = data[24][0]
                     if not reviews_data:
